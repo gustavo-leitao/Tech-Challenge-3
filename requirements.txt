@@ -1,0 +1,11 @@
+google-cloud-bigquery==3.45.0
+db-dtypes==1.7.1
+pandas==3.0.5
+pyarrow==25.0.1
+numpy==2.5.3
+scikit-learn>=1.5
+matplotlib>=3.9
+seaborn>=0.13
+shap>=0.46
+jupyter>=1.0
+ipykernel>=6.29

@@ -1,0 +1,28 @@
+# Material de trabalho que não deve ir para o repositório (enunciado, resumos, planejamento)
+Arquivos não commitaveis/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+.pytest_cache/
+*.egg-info/
+
+# Ambientes virtuais
+venv/
+.venv/
+env/
+
+# Credenciais (defensivo — nenhuma deve existir no repo)
+*.env
+.env
+*service-account*.json
+*credentials*.json
+application_default_credentials.json
+
+# SO / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
