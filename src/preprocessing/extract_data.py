@@ -7,8 +7,7 @@ Extrai o dataset município x ano usado no Tech Challenge Fase 3, combinando:
       br_bd_diretorios_brasil.municipio  -> dado territorial (estático, sem ano)
       br_inep_indicadores_educacionais.municipio -> dado educacional complementar
 
-Decisões incorporadas nesta query (ver Arquivos não commitaveis/PROGRESS.md para o raciocínio
-completo por trás de cada uma):
+Decisões incorporadas nesta query:
   - Unidade de análise = município x ano (não aluno individual): é o único grão em que existe
     sinal territorial/socioeconômico real nos dados disponíveis.
   - Recorte rede='5' (Pública, Estadual+Municipal) em silver.municipio: mesmo recorte já usado na
