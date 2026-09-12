@@ -1,0 +1,38 @@
+{
+  "modelo_campeao": "logistic_regression",
+  "melhores_hiperparametros": {
+    "model__C": 0.1
+  },
+  "cv_roc_auc_treino": 0.6960421322112911,
+  "cv_comparacao_candidatos": [
+    {
+      "modelo": "logistic_regression",
+      "media": 0.6956208858463063,
+      "desvio_padrao": 0.014720047753308103
+    },
+    {
+      "modelo": "gradient_boosting",
+      "media": 0.6890957052883221,
+      "desvio_padrao": 0.01161785181165639
+    },
+    {
+      "modelo": "random_forest",
+      "media": 0.6575476348238964,
+      "desvio_padrao": 0.012209257408741504
+    }
+  ],
+  "metricas_teste_holdout": {
+    "accuracy": 0.6408060453400504,
+    "precision": 0.562962962962963,
+    "recall": 0.3892445582586428,
+    "f1": 0.46025738077214234,
+    "roc_auc": 0.6744505085481175
+  },
+  "metricas_validacao_temporal_2023_para_2024": {
+    "accuracy": 0.46406727828746175,
+    "precision": 0.5131313131313131,
+    "recall": 0.09016684416045438,
+    "f1": 0.15338164251207728,
+    "roc_auc": 0.5534569395661214
+  }
+}
