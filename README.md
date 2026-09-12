@@ -6,20 +6,20 @@ populacionais e socioeconômicos.
 
 Este README é um guia de apresentação do projeto: contexto, principais conclusões e como executar.
 O desenvolvimento completo — código, gráficos, hipóteses testadas e decisões passo a passo — está
-nos notebooks (`notebooks/01_eda.ipynb` e `notebooks/02_modelagem.ipynb`); os links abaixo apontam
-para onde cada resultado foi construído.
+nos notebooks (`01_eda.ipynb`, `02_modelagem.ipynb`, `03_clustering.ipynb`); os links abaixo
+apontam para onde cada resultado foi construído.
 
 ## Estrutura do projeto
 
 ```
 data/               dataset bruto (CSV) e processado (Parquet)
-notebooks/          01_eda.ipynb (análise exploratória) e 02_modelagem.ipynb (pipeline de ML)
+notebooks/          01_eda.ipynb (EDA), 02_modelagem.ipynb (pipeline de ML), 03_clustering.ipynb (K-Means)
 src/preprocessing/  extração e junção dos dados (BigQuery)
-src/modeling/       pré-processador, modelos candidatos e treino/seleção do campeão
+src/modeling/       pré-processador, modelos candidatos, treino/seleção do campeão e clusterização
 src/evaluation/     métricas de classificação e resumo de validação cruzada
 src/visualization/  gráficos usados na EDA e na modelagem
 models/             pipeline final treinado (joblib)
-reports/            métricas do modelo campeão (JSON)
+reports/            métricas do modelo campeão e perfil dos clusters (JSON)
 images/             gráficos gerados pelos notebooks
 ```
 
@@ -109,6 +109,29 @@ contraintuitivo, consistente nas 5 regiões do país, sem explicação causal id
 
 ![Importância das variáveis (SHAP)](images/14_shap_summary.png)
 
+## Regiões com padrões semelhantes (clusterização)
+
+Além do modelo supervisionado, os municípios de 2024 foram agrupados por perfil territorial,
+populacional, socioeconômico e educacional (K-Means, sem usar UF/região como feature de
+agrupamento, só para caracterizar os grupos depois de formados). O melhor agrupamento (silhouette
+score) foi **k=2**:
+
+| Cluster | Municípios | % atingiu meta | Taxa de alfabetização média | Composição regional dominante | `dsu_ef_anos_iniciais` médio |
+|---|---|---|---|---|---|
+| 0 | 3.931 (75%) | 56,1% | 66,4% | Sudeste (38%), Sul (26%), Nordeste (21%) | 15,4% |
+| 1 | 1.301 (25%) | 47,1% | 54,9% | Nordeste (69%), Norte (17%), 31% Amazônia Legal | 27,5% |
+
+Os dois grupos têm desfecho de alfabetização bem diferente, mas o cluster 1 (pior desfecho) tem
+quase o dobro do percentual de docentes com curso superior do cluster 0 — o mesmo padrão
+contraintuitivo já visto na interpretação do modelo supervisionado, agora associado a um perfil
+regional inteiro (Nordeste/Norte/Amazônia Legal), não a uma variável isolada. Os silhouette scores
+foram modestos em todos os k testados (0,16-0,23), indicando um contínuo de perfis municipais em
+vez de fronteiras rígidas. Desenvolvimento completo em `notebooks/03_clustering.ipynb` e
+`src/modeling/clustering.py`.
+
+![Municípios por cluster (PCA)](images/15_clusters_pca.png)
+![Composição regional de cada cluster](images/16_clusters_por_regiao.png)
+
 ## Insights encontrados
 
 - A melhora de 2023 para 2024 (23,2% → 53,8% de municípios na meta) é uma melhora real na taxa de
@@ -131,8 +154,9 @@ Análise completa, incluindo hipóteses testadas e não confirmadas, em `noteboo
   nacional de um ano futuro sem recalibração.
 - PIB de 2024 usa 2023 como proxy (defasagem normal da fonte).
 - Possível choque exógeno no RS (enchentes de 2024) não capturado por nenhuma variável do dataset.
-- A pergunta de negócio sobre "regiões com padrões semelhantes" foi respondida apenas de forma
-  qualitativa (via coeficientes/SHAP), sem uma etapa formal de clusterização.
+- A clusterização teve silhouette scores modestos (0,16-0,23) em todos os valores de k testados —
+  os dois grupos encontrados são uma tendência real, não uma fronteira rígida entre perfis de
+  município.
 
 ## Aplicação prática para políticas públicas
 
@@ -149,8 +173,9 @@ Análise completa, incluindo hipóteses testadas e não confirmadas, em `noteboo
 
 ## Possíveis evoluções futuras
 
-- Clusterização (K-Means) de municípios/regiões para responder de forma quantitativa a pergunta
-  sobre regiões com padrões semelhantes.
+- Investigar a causa do perfil regional Nordeste/Norte/Amazônia Legal ter pior desfecho de
+  alfabetização apesar de maior percentual de docentes com curso superior (achado da
+  clusterização).
 - Investigar a hipótese das enchentes no RS com uma fonte externa de eventos climáticos.
 - Ampliar a série histórica conforme novos ciclos do INEP forem publicados.
 - Investigar a causa da relação negativa entre `dsu_ef_anos_iniciais` e o alvo.
@@ -165,6 +190,7 @@ pip install -r requirements.txt
 
 python src/preprocessing/extract_data.py
 python src/modeling/train_model.py
+python src/modeling/clustering.py
 ```
 
 A extração requer `gcloud auth login` já configurado com acesso de leitura ao projeto BigQuery de

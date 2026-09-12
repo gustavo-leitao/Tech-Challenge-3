@@ -1,0 +1,86 @@
+{
+  "ano_snapshot": 2024,
+  "n_municipios": 5232,
+  "features_agrupamento": [
+    "populacao",
+    "pib",
+    "taxa_aprovacao_ef_anos_iniciais",
+    "taxa_reprovacao_ef_anos_iniciais",
+    "taxa_abandono_ef_anos_iniciais",
+    "tdi_ef_anos_iniciais",
+    "atu_ef_anos_iniciais",
+    "dsu_ef_anos_iniciais",
+    "capital_uf",
+    "amazonia_legal"
+  ],
+  "silhouette_por_k": [
+    {
+      "k": 2,
+      "silhouette": 0.22560501917366282
+    },
+    {
+      "k": 3,
+      "silhouette": 0.18909048118695926
+    },
+    {
+      "k": 4,
+      "silhouette": 0.18562097640341907
+    },
+    {
+      "k": 5,
+      "silhouette": 0.19466741605370794
+    },
+    {
+      "k": 6,
+      "silhouette": 0.20976483184573383
+    },
+    {
+      "k": 7,
+      "silhouette": 0.20108231451928013
+    },
+    {
+      "k": 8,
+      "silhouette": 0.16455546294501192
+    }
+  ],
+  "k_escolhido": 2,
+  "silhouette_k_escolhido": 0.22560501917366282,
+  "perfil_dos_clusters": [
+    {
+      "cluster": 0,
+      "n_municipios": 3931,
+      "pct_atingiu_meta": 56.1,
+      "taxa_alfabetizacao_media": 66.4,
+      "populacao_mediana": 11371.0,
+      "pib_mediano": 382795000.0,
+      "pct_capital_uf": 0.5,
+      "pct_amazonia_legal": 7.8,
+      "dsu_ef_anos_iniciais_media": 15.4,
+      "composicao_regional_pct": {
+        "Sudeste": 37.6,
+        "Sul": 26.0,
+        "Nordeste": 21.3,
+        "Centro-Oeste": 10.8,
+        "Norte": 4.4
+      }
+    },
+    {
+      "cluster": 1,
+      "n_municipios": 1301,
+      "pct_atingiu_meta": 47.1,
+      "taxa_alfabetizacao_media": 54.9,
+      "populacao_mediana": 12312.0,
+      "pib_mediano": 202680000.0,
+      "pct_capital_uf": 0.0,
+      "pct_amazonia_legal": 30.9,
+      "dsu_ef_anos_iniciais_media": 27.5,
+      "composicao_regional_pct": {
+        "Nordeste": 69.3,
+        "Norte": 16.8,
+        "Sudeste": 8.7,
+        "Centro-Oeste": 2.8,
+        "Sul": 2.5
+      }
+    }
+  ]
+}
