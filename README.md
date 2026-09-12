@@ -15,7 +15,7 @@ apontam para onde cada resultado foi construído.
 data/               dataset bruto (CSV) e processado (Parquet)
 notebooks/          01_eda.ipynb (EDA), 02_modelagem.ipynb (pipeline de ML), 03_clustering.ipynb (K-Means)
 src/preprocessing/  extração e junção dos dados (BigQuery)
-src/modeling/       pré-processador, modelos candidatos, treino/seleção do campeão e clusterização
+src/modeling/       pré-processador, modelos candidatos, treino/seleção do campeão, clusterização e ranking de risco
 src/evaluation/     métricas de classificação e resumo de validação cruzada
 src/visualization/  gráficos usados na EDA e na modelagem
 models/             pipeline final treinado (joblib)
@@ -109,6 +109,15 @@ contraintuitivo, consistente nas 5 regiões do país, sem explicação causal id
 
 ![Importância das variáveis (SHAP)](images/14_shap_summary.png)
 
+## Municípios de maior risco
+
+Aplicando o pipeline campeão ao snapshot de 2024 completo (`src/modeling/predict_risk.py`,
+ranking completo em `reports/ranking_risco_municipios.csv`), **90% dos 20 municípios com menor
+probabilidade prevista de atingir a meta de fato não a atingiram**. A lista, porém, expõe uma
+limitação direta do próprio modelo: por o coeficiente de UF dominar a previsão, **os 20 primeiros
+colocados são quase todos da Bahia** — o ranking hoje funciona melhor como filtro estadual do que
+como diagnóstico fino por município. Discussão completa em `notebooks/02_modelagem.ipynb`.
+
 ## Regiões com padrões semelhantes (clusterização)
 
 Além do modelo supervisionado, os municípios de 2024 foram agrupados por perfil territorial,
@@ -157,13 +166,18 @@ Análise completa, incluindo hipóteses testadas e não confirmadas, em `noteboo
 - A clusterização teve silhouette scores modestos (0,16-0,23) em todos os valores de k testados —
   os dois grupos encontrados são uma tendência real, não uma fronteira rígida entre perfis de
   município.
+- O ranking de municípios de maior risco acerta 90% no Top 20, mas essa lista sai quase toda de
+  um único estado (Bahia) — reflexo do peso de UF na previsão, não um diagnóstico fino que
+  diferencie municípios dentro do mesmo estado.
 
 ## Aplicação prática para políticas públicas
 
 - Usado como ferramenta de triagem (limiar ≈0,38), o modelo identifica ≈70% dos municípios que de
-  fato não atingirão a meta — adequado para priorizar visitas técnicas e recursos.
+  fato não atingirão a meta — adequado para priorizar visitas técnicas e recursos. O ranking
+  completo por probabilidade prevista está em `reports/ranking_risco_municipios.csv`.
 - Peso forte de UF permite priorização geográfica objetiva (ex.: acompanhamento reforçado em
-  Bahia, Sergipe e Tocantins).
+  Bahia, Sergipe e Tocantins), mas não substitui um diagnóstico município a município dentro do
+  mesmo estado.
 - O grupo de 1.225 municípios a menos de 2 pontos da própria meta é um alvo natural para
   intervenções pontuais de curto prazo e baixo custo.
 - O modelo deve ser recalibrado a cada novo ciclo de avaliação, dado o salto real de patamar
@@ -173,6 +187,8 @@ Análise completa, incluindo hipóteses testadas e não confirmadas, em `noteboo
 
 ## Possíveis evoluções futuras
 
+- Treinar um modelo por UF (ou incluir interações UF × features municipais) para que o ranking de
+  risco diferencie municípios dentro do mesmo estado, em vez de ser dominado pelo efeito estadual.
 - Investigar a causa do perfil regional Nordeste/Norte/Amazônia Legal ter pior desfecho de
   alfabetização apesar de maior percentual de docentes com curso superior (achado da
   clusterização).
@@ -191,6 +207,7 @@ pip install -r requirements.txt
 python src/preprocessing/extract_data.py
 python src/modeling/train_model.py
 python src/modeling/clustering.py
+python src/modeling/predict_risk.py
 ```
 
 A extração requer `gcloud auth login` já configurado com acesso de leitura ao projeto BigQuery de
