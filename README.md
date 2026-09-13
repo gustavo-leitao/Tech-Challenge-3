@@ -102,6 +102,13 @@ A Regressão Logística venceu a comparação por validação cruzada — result
 expectativa inicial da EDA (que sugeria árvores, pelas correlações lineares fracas), reportado
 como está. Detalhes da comparação em `notebooks/02_modelagem.ipynb`.
 
+**Limitação da comparação:** os 3 candidatos foram comparados sem nenhum tuning — só depois de a
+Regressão Logística vencer essa comparação inicial (0,6956 sem tuning, já 0,0065 à frente do
+Gradient Boosting) é que o `RandomizedSearchCV` foi aplicado, só a ela, subindo o resultado para
+0,6960. Não testamos se Gradient Boosting ou Random Forest ganhariam mais que essa margem de
++0,0004 com uma busca de hiperparâmetros equivalente — dada a vantagem já existente antes de
+qualquer tuning, é pouco provável que mudasse o resultado, mas essa hipótese não foi verificada.
+
 ![Comparação dos modelos candidatos](images/09_comparacao_modelos.png)
 
 ## Métricas de avaliação
