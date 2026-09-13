@@ -10,6 +10,12 @@ Validação em duas frentes, ambas exigidas pelo objetivo de generalização do 
      desafio — prever risco futuro a partir de padrões estruturais — e não só a validação
      estatística cruzada de uma amostra embaralhada.
 
+O pipeline treinado só com 2023 (`models/pipeline_temporal_2023.joblib`) é salvo separado do
+campeão (`models/pipeline_final.joblib`) porque é ele — e não o campeão — que deve ser usado para
+aplicar o modelo ao snapshot completo de 2024 (`src/modeling/predict_risk.py`): o campeão é
+treinado num split 80/20 que mistura 2023+2024, então boa parte do snapshot de 2024 já foi vista
+por ele no treino; o pipeline temporal nunca viu nenhuma linha de 2024.
+
 O ponto de operação usado como ferramenta de triagem (recall/precisão da classe "risco" —
 município que NÃO atinge a meta, `atingiu_meta=0`) é escolhido só com o conjunto de treino, via
 probabilidade fora-da-dobra (`cross_val_predict`) — o conjunto de teste nunca entra na escolha do
@@ -159,6 +165,7 @@ def main() -> None:
     MODELS_DIR.mkdir(exist_ok=True)
     REPORTS_DIR.mkdir(exist_ok=True)
     joblib.dump(best_pipeline, MODELS_DIR / "pipeline_final.joblib")
+    joblib.dump(temporal_pipeline, MODELS_DIR / "pipeline_temporal_2023.joblib")
 
     report = {
         "modelo_campeao": champion_name,
@@ -176,6 +183,7 @@ def main() -> None:
         json.dump(report, f, indent=2, ensure_ascii=False, default=float)
 
     print(f"\nPipeline final salvo em {MODELS_DIR / 'pipeline_final.joblib'}")
+    print(f"Pipeline temporal (só 2023) salvo em {MODELS_DIR / 'pipeline_temporal_2023.joblib'}")
     print(f"Relatório de métricas salvo em {REPORTS_DIR / 'model_metrics.json'}")
 
 

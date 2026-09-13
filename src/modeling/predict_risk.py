@@ -1,13 +1,18 @@
 """
-Aplica o pipeline campeão já treinado (`models/pipeline_final.joblib`) ao snapshot mais recente
-de municípios para responder diretamente a pergunta de negócio "quais municípios estão em maior
+Aplica o pipeline treinado só com 2023 (`models/pipeline_temporal_2023.joblib`) ao snapshot de
+2024 completo para responder diretamente a pergunta de negócio "quais municípios estão em maior
 risco de não atingir a meta de alfabetização".
 
-O modelo é aplicado à mesma safra de dados usada no treino/teste (2024) porque é a mais recente
-disponível — a probabilidade prevista aqui simula como o modelo seria usado de forma prospectiva
-(a partir do perfil do município, sem olhar a taxa de alfabetização real), e o resultado real de
-2024 é mantido ao lado só para dar transparência de quão bem o ranking bateu com o que de fato
-aconteceu, não como informação usada pelo modelo.
+Usa o pipeline temporal, não o campeão (`models/pipeline_final.joblib`), de propósito: o campeão é
+treinado num split 80/20 que mistura linhas de 2023 e 2024, então a maior parte do snapshot de
+2024 já teria sido vista por ele durante o treino — o "acerto" do ranking incluiria município que
+o modelo já conhecia, não uma previsão de verdade. O pipeline temporal nunca viu nenhuma linha de
+2024 (foi treinado só com 2023, ver `src/modeling/train_model.py`), então aplicá-lo ao snapshot de
+2024 inteiro é uma previsão genuinamente fora da amostra — a mesma lógica já usada na validação
+temporal, reaproveitada aqui para gerar o ranking.
+
+O resultado real de 2024 é mantido ao lado só para dar transparência de quão bem o ranking bateu
+com o que de fato aconteceu, não como informação usada pelo modelo.
 
 Uso:
     python src/modeling/predict_risk.py
@@ -27,7 +32,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 from src.modeling.pipeline import FEATURE_COLUMNS  # noqa: E402
 
 DATA_PATH = PROJECT_ROOT / "data" / "processed" / "municipio_alfabetizacao_enriquecido.parquet"
-MODEL_PATH = PROJECT_ROOT / "models" / "pipeline_final.joblib"
+MODEL_PATH = PROJECT_ROOT / "models" / "pipeline_temporal_2023.joblib"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 SNAPSHOT_YEAR = 2024
 TOP_N = 20
