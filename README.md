@@ -40,10 +40,31 @@ impactam a alfabetização, quais municípios estão em maior risco, quais regi�
 semelhantes, como prever municípios que podem não atingir metas futuras, e quais variáveis mais
 pesam na decisão do modelo.
 
+## Escolha da unidade de análise
+
+O enunciado do desafio pede um modelo que preveja se **um aluno** será considerado alfabetizado ou
+não. Este projeto reformula o problema para o grão **município × ano**, por três motivos:
+
+- A camada Silver/Gold herdada da Fase 2 não tem nenhuma variável territorial, socioeconômica ou
+  populacional no nível do aluno individual — só `rede`, `ano` e `id_municipio`. Modelar no grão
+  aluno exigiria microdados individuais (ex.: Censo Escolar por aluno), fora do escopo de dados
+  disponível para este desafio.
+- É no grão município × ano que existe informação territorial (IBGE), populacional, de PIB e
+  educacional complementar suficiente para responder às perguntas de negócio do enunciado — em
+  especial "quais municípios apresentam maior risco" e "quais regiões possuem padrões
+  semelhantes", que já são formuladas no nível município/região, não aluno.
+- O alvo (`atingiu_meta`) usa a mesma meta oficial do INEP por município, preservando a
+  interpretação do enunciado ("prever municípios que podem não atingir metas futuras") sem
+  inventar um corte artificial de nota individual.
+
+É uma reformulação do problema para aderir aos dados realmente disponíveis, não um desvio do
+objetivo: o modelo passa a prever se **um município**, e não um aluno, atinge a própria meta de
+alfabetização — mantendo o foco em apoiar decisão de política pública, que é o objetivo central do
+desafio.
+
 ## Descrição da base utilizada
 
-**Unidade de análise: município × ano** (não aluno individual) — é o único grão em que existem
-variáveis territoriais e socioeconômicas reais associadas ao resultado de alfabetização.
+Unidade de análise: município × ano (ver seção anterior para a justificativa completa).
 
 - **9.921 linhas** (4.689 municípios em 2023 + 5.232 em 2024), 21 colunas.
 - **Fontes:** taxa/meta de alfabetização (rede pública) + população (IBGE), PIB (IBGE),
