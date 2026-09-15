@@ -28,11 +28,38 @@
     "f1": 0.46025738077214234,
     "roc_auc": 0.6744505085481175
   },
+  "metricas_teste_holdout_classe_risco_threshold_padrao": {
+    "accuracy": 0.6408060453400504,
+    "precision": 0.6698961937716263,
+    "recall": 0.8039867109634552,
+    "f1": 0.7308418271045678,
+    "roc_auc": 0.6744505085481175
+  },
+  "threshold_triagem_risco": {
+    "pos_label_otimizado": 0,
+    "threshold_atingir_meta": 0.43173520258129383,
+    "recall_pos_label": 0.7000415454923141,
+    "precision_pos_label": 0.7145886344359627
+  },
+  "metricas_teste_holdout_classe_risco_threshold_triagem": {
+    "accuracy": 0.6246851385390428,
+    "precision": 0.704,
+    "recall": 0.6578073089700996,
+    "f1": 0.6801202232717904,
+    "roc_auc": 0.6744505085481175
+  },
   "metricas_validacao_temporal_2023_para_2024": {
     "accuracy": 0.46406727828746175,
     "precision": 0.5131313131313131,
     "recall": 0.09016684416045438,
     "f1": 0.15338164251207728,
+    "roc_auc": 0.5534569395661214
+  },
+  "metricas_validacao_temporal_2023_para_2024_classe_risco": {
+    "accuracy": 0.46406727828746175,
+    "precision": 0.45894025754697065,
+    "recall": 0.9002070393374741,
+    "f1": 0.6079418344519015,
     "roc_auc": 0.5534569395661214
   }
 }

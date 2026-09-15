@@ -156,7 +156,6 @@ def plot_cluster_by_region(df: pd.DataFrame, labels: np.ndarray, path: Path) -> 
 def main() -> None:
     df = load_snapshot()
     needed_columns = CLUSTER_FEATURES + PROFILE_ONLY_COLUMNS
-    df = df.dropna(subset=["populacao", "pib"]).reset_index(drop=True)
 
     preprocessor = build_preprocessor()
     X_transformed = preprocessor.fit_transform(df[CLUSTER_FEATURES])
